@@ -1,36 +1,50 @@
+import React, { useState } from "react";
+import Alert from "./Components/Alert";
+import First from "./Components/First";
+import Second from "./Components/Second";
+import Third from "./Components/Third";
+import { BrowserRouter as Router, Routes, Route, Link} from "react-router-dom";
+
 function App() {
+  const [alert, setAlert] = useState(null);
+  const showAlert = (message, type) => {
+    setAlert({
+      msg: message,
+      type: type,
+    });
+    setTimeout(() => {
+      setAlert(null);
+    }, 1500);
+  };
+
+  const [mode, setMode] = useState("light");
+  const toggleMode = () => {
+    if (mode === "light") {
+      setMode("dark");
+      document.body.style.backgroundColor = "#7f7f8f";
+    } else {
+      setMode("light");
+      document.body.style.backgroundColor = "white";
+    }
+  };
+
   return (
-    <>
-      <button type="button" class="btn btn-success">
-        Success
-      </button>
-      <button type="button" class="btn btn-danger">
-        Danger
-      </button>
-      <div class="card">
-        <img src="..." class="card-img-top" alt="..." />
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
-          </p>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">An item</li>
-          <li class="list-group-item">A second item</li>
-          <li class="list-group-item">A third item</li>
-        </ul>
-        <div class="card-body">
-          <a href="/" class="card-link">
-            Card link
-          </a>
-          <a href="/" class="card-link">
-            Another link
-          </a>
-        </div>
-      </div>
-    </>
+    <Router>
+      <>
+        <First mode={mode} toggleMode={toggleMode} />
+        <Alert alert={alert} />
+        <Routes>
+          <Route exact path="/about" element={<Third />}></Route>
+          <Route
+            exact
+            path="/"
+            element={
+              <Second head="Text Analyzer" mode={mode} showAlert={showAlert} />
+            }
+          ></Route>
+        </Routes>
+      </>
+    </Router>
   );
 }
 
